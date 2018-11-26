@@ -1,3 +1,3 @@
 # enitsda
 
-En el directorio *Proyecto_Hackaton* se encuntra la presentación inicial.
+En el directorio *Proyecto_Hackaton* se encuentra la presentación inicial.
