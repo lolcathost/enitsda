@@ -3,8 +3,8 @@
 #include "nvs_flash.h"
 #include "esp_wifi.h"
 #include "esp_system.h"
-//#include "esp_event_loop.h"
-#include "esp_tls.h"
+#include "esp_gw.h"
+#include "esp_https.c"
 
 #include "lwip/err.h"
 #include "lwip/sockets.h"
@@ -14,7 +14,6 @@
 
 #define PAQUETE_CABECERA_TAM 24
 #define PAQUETE_POSICION_MAC 16
-
 int canal_seleccionado=1,canal_maximo=13;
 
 #define MAC_TOTAL_ARRAY 512
@@ -30,6 +29,12 @@ const wifi_promiscuous_filter_t filtro={
 	.filter_mask=WIFI_PROMIS_FILTER_MASK_MGMT|WIFI_PROMIS_FILTER_MASK_DATA
 };
 
+wifi_config_t wifi_config={
+	.sta={
+		.ssid=WIFI_SSID,
+		.password=WIFI_PASS,
+	},
+};
 
 // Funcion de interrupcion por cada recepcion de un paquete
 void sniffer(void* buf, wifi_promiscuous_pkt_type_t type){
@@ -74,21 +79,32 @@ void mac_mostrar_listados(void){
 	printf("# CONOCIDOS WF:[%d] BT:[%d]\n",mac_wifi_cuenta, mac_bt_cuenta);
 }
 
-void inicializar_wifi(void){
+void wifi_inicializar(void){
 	wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     esp_wifi_init(&cfg);
     esp_wifi_set_storage(WIFI_STORAGE_RAM);
-    esp_wifi_set_mode(WIFI_MODE_NULL);
     esp_wifi_set_promiscuous_filter(&filtro);
     esp_wifi_set_promiscuous_rx_cb(&sniffer);
     esp_wifi_set_ps(WIFI_PS_NONE);
-    esp_wifi_set_promiscuous(true);
     esp_wifi_set_channel(canal_seleccionado, WIFI_SECOND_CHAN_NONE);
 }
 
+void wifi_conectar_ap(void){
+	esp_wifi_set_promiscuous(false);
+    esp_wifi_set_mode(WIFI_MODE_STA);
+    esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config);
+    esp_wifi_start();
+}
+
+void wifi_promiscuo(void){
+    esp_wifi_set_mode(WIFI_MODE_NULL);
+	esp_wifi_set_promiscuous(true);
+}
 void app_main(){
 	nvs_flash_init();
-	inicializar_wifi();
+	tcpip_adapter_init();
+	wifi_inicializar();
+	wifi_promiscuo();
 	
 	while(true){
 		if(canal_seleccionado > canal_maximo){
