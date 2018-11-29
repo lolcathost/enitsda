@@ -1,0 +1,14 @@
+[Unit]
+Description=Monitor mode service
+After=network.target
+After=systemd-user-sessions.service
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python /opt/enitsda/wlan_to_mon.py
+TimeoutSec=30
+StartLimitInterval=350
+StartLimitBurst=10
+
+[Install]
+WantedBy=multi-user.target
