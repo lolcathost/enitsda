@@ -38,11 +38,6 @@ def PacketDet(pkt):
 			reason = "10"
 			send = 1
 		if send == 1:
-			#try:
-            			#extra = pkt.notdecoded
-            			#rssi = -(256 - ord(extra[-4:-3])) PENDING
-        		#except:
-            			#rssi = -100
                         mac = pkt.addr1
                         mac_n = re.sub('[:]', '', mac)
                         if mac_n == macdev: 
@@ -51,7 +46,6 @@ def PacketDet(pkt):
 			            'nodo':'2',   
 			    	    'tipo':'1',
                                     'deauth': True,}
-				    #'rssi':rssi}   #dst
                             SendData(DATA)
 
 def Detect(device):
