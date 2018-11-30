@@ -10,6 +10,7 @@ extern const uint8_t server_root_cert_pem_end[]   asm("_binary_server_root_cert_
  - restructurada funcion rtos para que tenga timeout y resetee el BIT WIFI_CONNECTED_BIT
  - quitado bucle del ejemplo
  - añadida envio de la DB de MACs por cada sesion TLS
+ - eliminados goto del codigo de ejemplo
  */
  
 void envio_https(void){
@@ -60,7 +61,7 @@ void envio_https(void){
 			
 		written_bytes = 0;
 		printf("%s\n",REQUEST);
-/*		do{
+		do{
 			ret = esp_tls_conn_write(tls, 
 			REQUEST + written_bytes, 
 			strlen(REQUEST) - written_bytes);
@@ -68,10 +69,12 @@ void envio_https(void){
 				written_bytes += ret;
 			} else if (ret != MBEDTLS_ERR_SSL_WANT_READ  && ret != MBEDTLS_ERR_SSL_WANT_WRITE) {
 				printf("esp_tls_conn_write  returned 0x%x\n", ret);
-				goto exit;
+				esp_tls_conn_delete(tls);    
+				return;
 			}
-		} while(written_bytes < strlen(REQUEST));*/
+		} while(written_bytes < strlen(REQUEST));
 	}
+	mac_wifi_cuenta=0;
 	
 	esp_tls_conn_delete(tls);    
 }
