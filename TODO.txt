@@ -1,0 +1,5 @@
+ESP32:
+	- Añadir descubrimiento bluetooth
+	- Corregir el random stack overflow en la petición HTTPS 
+	- Añadir POST + TOKEN
+	- Generar envio de MACs por HTTPS

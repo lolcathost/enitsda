@@ -25,7 +25,7 @@ void envio_https(void *pvParameters){
     uxBits=xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT, true, true, 3000/portTICK_PERIOD_MS);
 	if(uxBits == 0){
 		printf("No hemos podido conectar a la wifi, salimos\n");
-		return; 	
+		goto exit_evento;	
 	}
 	
 	esp_tls_cfg_t cfg_tls={
@@ -86,4 +86,6 @@ void envio_https(void *pvParameters){
 	exit:
 	esp_tls_conn_delete(tls);    
 	putchar('\n'); // JSON output doesn't have a newline at end
+	
+	exit_evento:
 }
