@@ -32,6 +32,10 @@ Manual para grabar en un esp32:
 	  - >#define WEB_URL "tu_url"
 	  - >#define WIFI_SSID "tu_wifi"
 	  - >#define WIFI_PASS "tu_contraseña"
+	  - >#define IP      "ip"
+	  - >#define GW      "puerta_de_enlace"
+	  - >#define NETMASK "mascara_de_red"
+	  - >#define DNS	"ip_servidor_dns"
     - make
 		- En este punto tarda porque compila todo el SDK la primera vez.
 	- make flash

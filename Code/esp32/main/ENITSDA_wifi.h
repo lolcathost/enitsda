@@ -1,6 +1,6 @@
 /* Basado en el ejemplo "cmd_sniffer" de espressif
    Revisado como funciona y esta practicamente reescrito a mi necesidad
-   He metido, mirando la documentación y google para implementar una IP estatica junto con DNS.
+   He metido, mirando la documentación y google, para implementar una IP estatica junto con DNS.
 */
    
 
@@ -16,11 +16,6 @@
 #include "lwip/sys.h"
 #include "lwip/netdb.h"
 #include "lwip/dns.h"
-
-#define IP      "192.168.5.2"
-#define GW      "192.168.5.1"
-#define NETMASK "255.255.255.0"
-#define DNS		"192.168.5.1"
 
 #define INTENTOS_RECONECTAR 3
 static EventGroupHandle_t s_wifi_event_group;

@@ -5,11 +5,17 @@
 extern const uint8_t server_root_cert_pem_start[] asm("_binary_server_root_cert_pem_start");
 extern const uint8_t server_root_cert_pem_end[]   asm("_binary_server_root_cert_pem_end");
 
-// Por modificar, sera POST con TOKEN (esta es la referencia inicial del ejemplo)
-static const char *REQUEST = "GET " WEB_URL " HTTP/1.0\r\n"
+// Por modificar, sera POST con TOKEN y hay que meterlo con la DB de las mac wifi
+static const char *REQUEST="POST "WEB_URL" HTTP/1.1\r\n"
     "Host: "WEB_SERVER"\r\n"
     "User-Agent: esp-idf/1.0 esp32\r\n"
-    "\r\n";
+	"Authorization: Token "TOKEN"\r\n" 
+	"Content-Type: application/json\r\n"
+	"Accept: application/json\r\n"
+	"Content-Length: 33\r\n"
+	"\r\n"
+    "{\"mac\":\"ffffffffffff\",\"nodo\":\"1\"}\r\n"	
+	"\r\n";
 
 /* Ligeramente modificada del https_request:
  - eliminados parte logs
@@ -17,10 +23,10 @@ static const char *REQUEST = "GET " WEB_URL " HTTP/1.0\r\n"
  - quitado bucle del ejemplo
  */
  
-void envio_https(void *pvParameters){
+void envio_https(void){
     char buf[512];
     int ret, len;
-	
+	printf("%s\n\n",REQUEST);
 	EventBits_t uxBits;
     uxBits=xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT, true, true, 3000/portTICK_PERIOD_MS);
 	if(uxBits == 0){
@@ -80,12 +86,15 @@ void envio_https(void *pvParameters){
 
 		for(int i = 0; i < len; i++) {
 			putchar(buf[i]);
+		printf(".");
 		}
+		printf(".");
 	} while(1);
 	
 	exit:
 	esp_tls_conn_delete(tls);    
 	putchar('\n'); // JSON output doesn't have a newline at end
 	
-	exit_evento:
+	exit_evento: ;
+	printf("Salimos del envio_https\n");
 }

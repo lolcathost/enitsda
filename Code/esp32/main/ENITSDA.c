@@ -27,7 +27,7 @@ void app_main(){
 		if(canal_seleccionado > canal_maximo){
 				mac_mostrar_listados();
 				wifi_conectar_ap();
-				xTaskCreate(&envio_https, "envio_https", 8192, NULL, 5, NULL);
+				envio_https();
 				esp_wifi_stop();
 				wifi_promiscuo();
 				canal_seleccionado=1;
