@@ -14,10 +14,10 @@ static const char *REQUEST = "GET " WEB_URL " HTTP/1.0\r\n"
 /* Ligeramente modificada del https_request:
  - eliminados parte logs
  - restructurada funcion rtos para que tenga timeout y resetee el BIT WIFI_CONNECTED_BIT
- - quitado bucle original inecesario y gotos
+ - quitado bucle del ejemplo
  */
  
-void envio_https(void){
+void envio_https(void *pvParameters){
     char buf[512];
     int ret, len;
 	
@@ -39,7 +39,7 @@ void envio_https(void){
 		printf("Connection established...\n");
 	}else{
 		printf("Connection failed...\n");
-		return;
+		goto exit;
 	}
 	
 	size_t written_bytes = 0;
@@ -51,7 +51,7 @@ void envio_https(void){
 			written_bytes += ret;
 		} else if (ret != MBEDTLS_ERR_SSL_WANT_READ  && ret != MBEDTLS_ERR_SSL_WANT_WRITE) {
 			printf("esp_tls_conn_write  returned 0x%x\n", ret);
-			return;
+			goto exit;
 		}
 	} while(written_bytes < strlen(REQUEST));
 
@@ -82,7 +82,8 @@ void envio_https(void){
 			putchar(buf[i]);
 		}
 	} while(1);
-
+	
+	exit:
 	esp_tls_conn_delete(tls);    
 	putchar('\n'); // JSON output doesn't have a newline at end
 }

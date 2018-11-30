@@ -1,6 +1,6 @@
 /* Basado en el ejemplo "cmd_sniffer" de espressif
    Revisado como funciona y esta practicamente reescrito a mi necesidad
-   He metido mirando la documentación y google para implementar una IP estatica junto con DNS.
+   He metido, mirando la documentación y google para implementar una IP estatica junto con DNS.
 */
    
 
