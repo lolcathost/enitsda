@@ -1,10 +1,11 @@
 ESP32:
-	- Añadir descubrimiento bluetooth
-	- Corregir el random stack overflow en la petición HTTPS 
-	- Añadir POST + TOKEN
-	- Generar envio de MACs por HTTPS
+	- [ ] Añadir descubrimiento bluetooth
+	- [x] Corregir el random stack overflow en la petición HTTPS 
+	- [x] Añadir POST + TOKEN
+	- [x] Generar envio de MACs por HTTPS
 C&C:
-	- Lógica para alertas
-	- Cierre de issues
-	- uwsgi automatico
-	- hardeningg rabbitmq
+	- [x] Lógica para alertas
+	- [ ] Mejora de alertas
+	- [x] Bot telegram
+	- [x] uwsgi automatico
+	- [ ] hardeningg rabbitmq
