@@ -32,6 +32,8 @@ void envio_https(void){
 		.cacert_pem_bytes = server_root_cert_pem_end - server_root_cert_pem_start,
 	};
 	printf("URL: %s, CFG bytes: %d\n", WEB_URL, cfg_tls.cacert_pem_bytes);
+				printf("HEAP: %d\n", esp_get_free_heap_size());
+				printf("STACK: %d\n", uxTaskGetStackHighWaterMark(NULL));	
 	struct esp_tls *tls = esp_tls_conn_http_new(WEB_URL, &cfg_tls);
 
 	if(tls != NULL) {
