@@ -11,25 +11,21 @@ from setconfig import *
 
 conf.verbose=0
 URL = "https://hackaton.hacklab.cx/api/devices/"
-
 (script, device, macdev) = argv
+last_packet = time.time()
 
 def SendData(PARAMS):
 	try:
                 r = requests.post(url = URL, headers={'Authorization': 'Token {}'.format(TOKEN)}, json = PARAMS)
 	except AttributeError:
-		pass
-
-def time_diff(time_start, time_end):
-    start = datetime.strptime(time_start, "%H%M%S")
-    end = datetime.strptime(time_end, "%H%M%S")
-    difference = end - start
-    seconds = difference.total_seconds()
-    return int(seconds)
+                print("Error en envio")
+                return r
 
 # Detect deauth packets and report with SendData()
 def PacketDet(pkt):
+        global last_packet
 	if pkt.haslayer(Dot11Deauth):
+                timestamp = time.time()
 		send = 0
 		if 0 <= pkt.reason <= 9:
 			reason = str(pkt.reason)
@@ -41,13 +37,15 @@ def PacketDet(pkt):
                         mac = pkt.addr1
                         mac_n = re.sub('[:]', '', mac)
                         if mac_n == macdev: 
-                            print(mac_n)
-                            DATA = {'mac':mac_n, 
-			            'nodo':'2',   
+                            print(mac_n, timestamp, last_packet)
+                            DATA = {'mac':mac_n,
+			            'nodo':'2',  
 			    	    'tipo':'1',
                                     'deauth': True,}
-                            SendData(DATA)
-
+                            if timestamp > last_packet+2:
+                                SendData(DATA)
+                                last_packet = timestamp
+             
 def Detect(device):
             sniff(iface=device, prn=PacketDet, store=0)
 
