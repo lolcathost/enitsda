@@ -3,3 +3,8 @@ ESP32:
 	- Corregir el random stack overflow en la petición HTTPS 
 	- Añadir POST + TOKEN
 	- Generar envio de MACs por HTTPS
+C&C:
+	- Lógica para alertas
+	- Cierre de issues
+	- uwsgi automatico
+	- hardeningg rabbitmq
