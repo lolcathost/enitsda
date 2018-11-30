@@ -5,13 +5,18 @@
 extern const uint8_t server_root_cert_pem_start[] asm("_binary_server_root_cert_pem_start");
 extern const uint8_t server_root_cert_pem_end[]   asm("_binary_server_root_cert_pem_end");
 
-// Por modificar, sera POST con TOKEN
+// Por modificar, sera POST con TOKEN (esta es la referencia inicial del ejemplo)
 static const char *REQUEST = "GET " WEB_URL " HTTP/1.0\r\n"
     "Host: "WEB_SERVER"\r\n"
     "User-Agent: esp-idf/1.0 esp32\r\n"
     "\r\n";
 
-// ligeramente modificada del https_request
+/* Ligeramente modificada del https_request:
+ - eliminados parte logs
+ - restructurada funcion rtos para que tenga timeout y resetee el BIT WIFI_CONNECTED_BIT
+ - quitado bucle original inecesario y gotos
+ */
+ 
 void envio_https(void){
     char buf[512];
     int ret, len;
