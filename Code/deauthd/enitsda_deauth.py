@@ -4,17 +4,28 @@ from time import sleep
 import requests
 import threading
 from threading import Thread
+import re
+from datetime import datetime
+from sys import argv
+from setconfig import *
 
-URL = "https://hackaton.hacklab.cx/device/"
 conf.verbose=0
-device = "wlan1"
+URL = "https://hackaton.hacklab.cx/api/devices/"
+
+(script, device, macdev) = argv
 
 def SendData(PARAMS):
 	try:
-		r = requests.post(url = URL, json = PARAMS)
-		#print r.status_code
+                r = requests.post(url = URL, headers={'Authorization': 'Token {}'.format(TOKEN)}, json = PARAMS)
 	except AttributeError:
 		pass
+
+def time_diff(time_start, time_end):
+    start = datetime.strptime(time_start, "%H%M%S")
+    end = datetime.strptime(time_end, "%H%M%S")
+    difference = end - start
+    seconds = difference.total_seconds()
+    return int(seconds)
 
 # Detect deauth packets and report with SendData()
 def PacketDet(pkt):
@@ -27,17 +38,24 @@ def PacketDet(pkt):
 			reason = "10"
 			send = 1
 		if send == 1:
-                        print(pkt.addr1) #from
-			print(pkt.addr2) #to
-			print(pkt.addr3) #dst
-			print("===========")
-                        #SendData()
+			#try:
+            			#extra = pkt.notdecoded
+            			#rssi = -(256 - ord(extra[-4:-3])) PENDING
+        		#except:
+            			#rssi = -100
+                        mac = pkt.addr1
+                        mac_n = re.sub('[:]', '', mac)
+                        if mac_n == macdev: 
+                            print(mac_n)
+                            DATA = {'mac':mac_n, 
+			            'nodo':'2',   
+			    	    'tipo':'1',
+                                    'deauth': True,}
+				    #'rssi':rssi}   #dst
+                            SendData(DATA)
 
 def Detect(device):
             sniff(iface=device, prn=PacketDet, store=0)
-
-# Modify iface to your monitor iface
-#sniff(iface="wlan1", prn=PacketDet, store=False, lfilter=lambda pkt:Dot11 in pkt)
 
 if __name__ == "__main__":
         Thread(target = Detect(device)).start()
