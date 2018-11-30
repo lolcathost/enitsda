@@ -7,6 +7,8 @@ de seguridad perimetral.
 La documentación de espressif para las API:
  - https://docs.espressif.com
 Se han usado parte de los ejemplos que trae espressif en su SDK:
+ - cmd_sniffer
+ - freertos
  - https_request
  - bt_discovery (se usará en un futuro, aun no implementado)
 
@@ -14,7 +16,7 @@ Manual para grabar en un esp32:
  - Requisitos:
   - Tener la preinstalación que indica espressif:
     - https://docs.espressif.com/projects/esp-idf/en/latest/get-started/index.html#setup-toolchain
-	- Conocer el puerto COMX (en windows) o el /dev/ttyXXX (en linux) que genera el esp32.
+	- Conocer el puerto comX (en windows) o el /dev/ttyXXX (en linux) que genera el esp32.
 	- Tener, obviamente, un esp32 :P.
   - Instalación:
 	- git clone https://github.com/lolcathost/enitsda/

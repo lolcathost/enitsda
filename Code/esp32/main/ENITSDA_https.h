@@ -1,3 +1,5 @@
+// Basado en el ejemplo "https_request" de espressif
+
 #include "esp_tls.h"
 
 extern const uint8_t server_root_cert_pem_start[] asm("_binary_server_root_cert_pem_start");
@@ -11,7 +13,14 @@ static const char *REQUEST = "GET " WEB_URL " HTTP/1.0\r\n"
 void envio_https(void){
     char buf[512];
     int ret, len;
-
+	
+	EventBits_t uxBits;
+    uxBits=xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT, true, true, 3000/portTICK_PERIOD_MS);
+	if(uxBits == 0){
+		printf("No hemos podido conectar a la wifi, salimos\n");
+		return; 	
+	}
+	
 	esp_tls_cfg_t cfg_tls={
 		.cacert_pem_buf  = server_root_cert_pem_start,
 		.cacert_pem_bytes = server_root_cert_pem_end - server_root_cert_pem_start,

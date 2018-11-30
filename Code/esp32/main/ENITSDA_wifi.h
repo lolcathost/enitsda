@@ -1,5 +1,11 @@
+// Basado en el ejemplo "cmd_sniffer" de espressif
+
 #include "esp_wifi.h"
 #include "esp_event_loop.h"
+
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "freertos/event_groups.h"
 
 #include "lwip/err.h"
 #include "lwip/sockets.h"
@@ -12,11 +18,27 @@
 #define NETMASK "255.255.255.0"
 #define DNS		"192.168.5.1"
 
-#define PAQUETE_CABECERA_TAM 24
-#define PAQUETE_POSICION_MAC 16
-int canal_seleccionado=1,canal_maximo=13;
+#define INTENTOS_RECONECTAR 3
+static EventGroupHandle_t s_wifi_event_group;
+const int WIFI_CONNECTED_BIT = BIT0;
+static int s_retry_num = 0;
 
-// Filtro de paquetes WIFI: gestion y datos
+static esp_err_t event_handler(void *ctx, system_event_t *event){
+    switch(event->event_id) {
+    case SYSTEM_EVENT_STA_START:
+        esp_wifi_connect();
+        break;
+    case SYSTEM_EVENT_STA_GOT_IP:
+        printf( "got ip:%s\n", ip4addr_ntoa(&event->event_info.got_ip.ip_info.ip));
+        s_retry_num = 0;
+        xEventGroupSetBits(s_wifi_event_group, WIFI_CONNECTED_BIT);
+        break;
+    default:
+        break;
+    }
+    return ESP_OK;
+}
+
 const wifi_promiscuous_filter_t filtro={
 	.filter_mask=WIFI_PROMIS_FILTER_MASK_MGMT|WIFI_PROMIS_FILTER_MASK_DATA
 };
@@ -30,7 +52,10 @@ struct DB{
 int mac_wifi_cuenta=0,mac_bt_cuenta=0;
 
 
-// Funcion de interrupcion por cada recepcion de un paquete
+#define PAQUETE_CABECERA_TAM 24
+#define PAQUETE_POSICION_MAC 16
+int canal_seleccionado=1,canal_maximo=13;
+
 void sniffer(void* buf, wifi_promiscuous_pkt_type_t type){
 	int mac_temp[6];
 	int paquete_tam;
@@ -68,7 +93,8 @@ void wifi_inicializar(void){
 	tcpip_adapter_ip_info_t esp_ip;
 	tcpip_adapter_dns_info_t dnsserver;
 
-	esp_event_loop_init(NULL, NULL);
+	s_wifi_event_group = xEventGroupCreate();
+	esp_event_loop_init(event_handler, NULL);
 	wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     esp_wifi_init(&cfg);
     esp_wifi_set_storage(WIFI_STORAGE_RAM);
@@ -88,7 +114,6 @@ void wifi_inicializar(void){
 
 void wifi_conectar_ap(void){
 	esp_wifi_set_promiscuous(false);
-	
     wifi_config_t wifi_config = {
         .sta = {
             .ssid = WIFI_SSID,
@@ -98,18 +123,6 @@ void wifi_conectar_ap(void){
     esp_wifi_set_mode(WIFI_MODE_STA);
     esp_wifi_set_config(ESP_IF_WIFI_STA, &wifi_config);
     esp_wifi_start();
-	while(true){
-		printf("a %s\n",SYSTEM_EVENT_STA_START);
-				vTaskDelay(500 / portTICK_PERIOD_MS);
-	}
-	esp_wifi_connect();
-		vTaskDelay(500 / portTICK_PERIOD_MS);
-		vTaskDelay(100 / portTICK_PERIOD_MS);
-		vTaskDelay(100 / portTICK_PERIOD_MS);
-		vTaskDelay(500 / portTICK_PERIOD_MS);
-		vTaskDelay(100 / portTICK_PERIOD_MS);
-		vTaskDelay(100 / portTICK_PERIOD_MS);
-
 }
 
 void wifi_promiscuo(void){
@@ -117,3 +130,5 @@ void wifi_promiscuo(void){
 	esp_wifi_set_promiscuous(true);
 	esp_wifi_set_channel(canal_seleccionado, WIFI_SECOND_CHAN_NONE);
 }
+
+
