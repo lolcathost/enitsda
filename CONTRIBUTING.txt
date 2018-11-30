@@ -1,3 +1,3 @@
-Algun tipo de fingerprinting en capa 2 de WIFI.
+Estamos buscando algún tipo de fingerprinting en capa 2 de WIFI.
 
-Se esta analizando en los frames el Duration ID por si tiene algun tipo de diferencia entre OSes.
+Por ahora estmaos analizando en los frames WIFI el campo Duration ID por si tiene algun tipo de diferencia entre OSes.
