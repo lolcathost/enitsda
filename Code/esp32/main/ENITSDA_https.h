@@ -60,36 +60,6 @@ void envio_https(void){
 			goto exit;
 		}
 	} while(written_bytes < strlen(REQUEST));
-
-	printf("Reading HTTP response...\n");
-
-	do{
-		len = sizeof(buf) - 1;
-		bzero(buf, sizeof(buf));
-		ret = esp_tls_conn_read(tls, (char *)buf, len);
-		
-		if(ret == MBEDTLS_ERR_SSL_WANT_WRITE  || ret == MBEDTLS_ERR_SSL_WANT_READ)
-			continue;
-		
-		if(ret < 0){
-			printf("esp_tls_conn_read  returned -0x%x\n", -ret);
-			break;
-		}
-
-		if(ret == 0){
-			printf("connection closed\n");
-			break;
-		}
-
-		len = ret;
-		printf("%d bytes read\n", len);
-
-		for(int i = 0; i < len; i++) {
-			putchar(buf[i]);
-		printf(".");
-		}
-		printf(".");
-	} while(1);
 	
 	exit:
 	esp_tls_conn_delete(tls);    
