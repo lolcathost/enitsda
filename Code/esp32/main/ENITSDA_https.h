@@ -12,13 +12,13 @@ void envio_https(void){
     char buf[512];
     int ret, len;
 
-	esp_tls_cfg_t cfg={
+	esp_tls_cfg_t cfg_tls={
 		.cacert_pem_buf  = server_root_cert_pem_start,
 		.cacert_pem_bytes = server_root_cert_pem_end - server_root_cert_pem_start,
 	};
-	
-	struct esp_tls *tls = esp_tls_conn_http_new(WEB_URL, &cfg);
-	
+	printf("URL: %s, CFG bytes: %d\n", WEB_URL, cfg_tls.cacert_pem_bytes);
+	struct esp_tls *tls = esp_tls_conn_http_new(WEB_URL, &cfg_tls);
+
 	if(tls != NULL) {
 		printf("Connection established...\n");
 	}else{
