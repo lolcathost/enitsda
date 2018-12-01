@@ -2,15 +2,7 @@
    Revisado como funciona y esta practicamente reescrito a mi necesidad
    He metido, mirando la documentación y google, para implementar una IP estatica junto con DNS.
 */
-   
-
 #include "esp_wifi.h"
-#include "esp_event_loop.h"
-
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "freertos/event_groups.h"
-
 #include "lwip/err.h"
 #include "lwip/sockets.h"
 #include "lwip/sys.h"
@@ -42,14 +34,8 @@ const wifi_promiscuous_filter_t filtro={
 	.filter_mask=WIFI_PROMIS_FILTER_MASK_MGMT|WIFI_PROMIS_FILTER_MASK_DATA
 };
 
-#define MAC_TOTAL_ARRAY 254
-struct DB{
-	int mac[6];
-	signed int rssi;
-}mac_wifi_listado[MAC_TOTAL_ARRAY];
-//int mac_bt_listado[MAC_TOTAL_ARRAY][6];
-int mac_wifi_cuenta=0,mac_bt_cuenta=0;
-
+struct DB mac_wifi_listado[MAC_TOTAL_ARRAY];
+int mac_wifi_cuenta=0;
 
 #define PAQUETE_CABECERA_TAM 24
 #define PAQUETE_POSICION_MAC 16
