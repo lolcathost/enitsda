@@ -34,7 +34,7 @@ class Nodo(models.Model):
                     regex='^[0-9a-fA-F]*$',
                     message='Valor MAC incorrecto',
         ),])
-    alias = models.CharField(max_length=12, blank=True, null=True)
+    alias = models.CharField(max_length=12, blank=False, null=False)
     app = models.FileField(blank=True, null=True, verbose_name=('Software image'))
     comentario = models.TextField(blank=True, null=True)
     def __str__(self):
@@ -48,7 +48,7 @@ class Blacklist(models.Model):
                     message='Valor MAC incorrecto',
         ),
     ])
-    alias = models.CharField(max_length=20, blank=True)
+    alias = models.CharField(max_length=20, blank=False, null=False)
     def __str__(self):
         return self.mac
     class Meta:
