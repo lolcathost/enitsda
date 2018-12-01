@@ -1,5 +1,4 @@
 // Basado en el ejemplo "https_request" de espressif
-
 #include "esp_tls.h"
 
 extern const uint8_t server_root_cert_pem_start[] asm("_binary_server_root_cert_pem_start");
@@ -19,6 +18,8 @@ void envio_https(void){
 	char REQUEST[512];
 	char JSON[128];
 	char mac_cadena[12];
+	//int *p=NULL,*r=NULL;
+	int https_cuenta=0;
 	
 	EventBits_t uxBits;
     uxBits=xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT, true, true, 10000/portTICK_PERIOD_MS);
@@ -31,9 +32,8 @@ void envio_https(void){
 		.cacert_pem_buf  = server_root_cert_pem_start,
 		.cacert_pem_bytes = server_root_cert_pem_end - server_root_cert_pem_start,
 	};
-	printf("URL: %s, CFG bytes: %d\n", WEB_URL, cfg_tls.cacert_pem_bytes);
-				printf("HEAP: %d\n", esp_get_free_heap_size());
-				printf("STACK: %d\n", uxTaskGetStackHighWaterMark(NULL));	
+	printf("HEAP: %d\n", esp_get_free_heap_size());
+	printf("STACK: %d\n", uxTaskGetStackHighWaterMark(NULL));	
 	struct esp_tls *tls = esp_tls_conn_http_new(WEB_URL, &cfg_tls);
 
 	if(tls != NULL) {
@@ -45,11 +45,22 @@ void envio_https(void){
 	}
 	
 	// Envio de MACS adaptado. Se envian todas las MACS recolectadas al servidor en una sesion TLS.
-	// Falta Bluetooth
-	for(int i=0;i<mac_wifi_cuenta;i++){
-		int *p=mac_wifi_listado[i].mac;
+	if (TIPO_ESCANEO == ESCANEO_WIFI){
+		https_cuenta=mac_wifi_cuenta;
+	}else if(TIPO_ESCANEO == ESCANEO_BT){
+		https_cuenta=mac_bt_cuenta;
+	}
+
+	for(int i=0;i<https_cuenta;i++){
+		if (TIPO_ESCANEO == ESCANEO_WIFI){
+			int *p=mac_wifi_listado[i].mac;
+			int *r=mac_wifi_listado[i].rssi;
+		}else if(TIPO_ESCANEO == ESCANEO_BT){
+			int *p=mac_bt_listado[i].mac;
+			int *r=mac_bt_listado[i].rssi;
+		}
 		snprintf(mac_cadena,sizeof(mac_cadena),"%02x%02x%02x%02x%02x%02x",p[0],p[1],p[2],p[3],p[4],p[5]);
-		snprintf(JSON,sizeof(JSON),"{\"mac\":\"%s\",\"nodo\":\"%s\",\"tipo\":\"1\",\"rssi\":\"%d\"}\r\n",mac_cadena,ESP_NODO,mac_wifi_listado[i].rssi);
+		snprintf(JSON,sizeof(JSON),"{\"mac\":\"%s\",\"nodo\":\"%s\",\"tipo\":\"%d\",\"rssi\":\"%d\"}\r\n",mac_cadena,ESP_NODO,TIPO_ESCANEO,r);
 		snprintf(REQUEST, sizeof(REQUEST), "POST %s HTTP/1.1\r\n"
 			"Host: %s\r\n"
 			"User-Agent: esp-idf/1.0 esp32\r\n"
@@ -63,6 +74,7 @@ void envio_https(void){
 			
 		written_bytes = 0;
 		printf("%s\n",REQUEST);
+		/*
 		do{
 			ret = esp_tls_conn_write(tls, 
 			REQUEST + written_bytes, 
@@ -75,8 +87,12 @@ void envio_https(void){
 				return;
 			}
 		} while(written_bytes < strlen(REQUEST));
+		*/
 	}
+	printf("Reseteo de variables de conteo wifi y bt\n");
 	mac_wifi_cuenta=0;
+	mac_bt_cuenta=0;
 	
+	printf("Cerramos TLS.\n");
 	esp_tls_conn_delete(tls);    
 }
