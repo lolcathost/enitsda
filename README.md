@@ -11,13 +11,23 @@ Dentro del directorio *Code* se irán subiendo todos los cambios y el software a
 *TODO*
 
 ESP32:
+
 	- [ ] Añadir descubrimiento bluetooth
+	
 	- [x] Corregir el random stack overflow en la petición HTTPS 
+	
 	- [x] Añadir POST + TOKEN
+	
 	- [x] Generar envio de MACs por HTTPS
+	
 C&C:
+
 	- [x] Lógica para alertas
+	
 	- [ ] Mejora de alertas
+	
 	- [x] Bot telegram
+	
 	- [x] uwsgi automatico
+	
 	- [ ] hardeningg rabbitmq
