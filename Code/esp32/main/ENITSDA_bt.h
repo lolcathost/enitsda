@@ -26,6 +26,9 @@ typedef struct {
 
 static app_gap_cb_t m_dev_info;
 
+static EventGroupHandle_t evento_envio_bt;
+const int ESCANEO_BT_ACABADO = BIT0;
+
 struct DB mac_bt_listado[MAC_TOTAL_ARRAY];
 int mac_bt_cuenta=0;
 
@@ -79,6 +82,7 @@ void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param){
 				printf( "Device discovery stopped.\n");
 
 				printf("TOTAL: %d\n",mac_bt_cuenta);
+				xEventGroupSetBits(evento_envio_bt, ESCANEO_BT_ACABADO);
 				p_dev->state = APP_GAP_STATE_DEVICE_DISCOVERING;
 				esp_bt_gap_start_discovery(ESP_BT_INQ_MODE_GENERAL_INQUIRY, 10, 0);
 			} else if (param->disc_st_chg.state == ESP_BT_GAP_DISCOVERY_STARTED) {
@@ -95,6 +99,7 @@ void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param){
 }
 
 void bt_inicializar(void){
+	evento_envio_bt = xEventGroupCreate();
     esp_bt_controller_mem_release(ESP_BT_MODE_BLE);
     esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
 	esp_bt_controller_init(&bt_cfg);
