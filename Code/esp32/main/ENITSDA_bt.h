@@ -56,7 +56,7 @@ static void update_device_info(esp_bt_gap_cb_param_t *param){
 					memcpy(mac_bt_listado[mac_bt_cuenta].mac,mac_temp,sizeof(mac_temp));	
 					mac_bt_listado[mac_bt_cuenta].rssi=rssi;
 					mac_bt_cuenta++;
-					printf("MAC BT AÑADIDA\n");
+					printf("mac añadida\n");
 				}
 			}  
             break;
@@ -77,14 +77,10 @@ void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param){
 		case ESP_BT_GAP_DISC_STATE_CHANGED_EVT: {
 			if (param->disc_st_chg.state == ESP_BT_GAP_DISCOVERY_STOPPED) {
 				printf( "Device discovery stopped.\n");
+
 				printf("TOTAL: %d\n",mac_bt_cuenta);
-				if ( (p_dev->state == APP_GAP_STATE_DEVICE_DISCOVER_COMPLETE ||
-						p_dev->state == APP_GAP_STATE_DEVICE_DISCOVERING)
-						&& p_dev->dev_found) {
-					p_dev->state = APP_GAP_STATE_SERVICE_DISCOVERING;
-					printf( "Discover services ...\n");
-					esp_bt_gap_get_remote_services(p_dev->bda);
-				}
+				p_dev->state = APP_GAP_STATE_DEVICE_DISCOVERING;
+				esp_bt_gap_start_discovery(ESP_BT_INQ_MODE_GENERAL_INQUIRY, 50, 0);
 			} else if (param->disc_st_chg.state == ESP_BT_GAP_DISCOVERY_STARTED) {
 				printf( "Discovery started.\n");
 			}
@@ -115,7 +111,7 @@ void bt_escaneo(void){
     app_gap_cb_t *p_dev = &m_dev_info;
     memset(p_dev, 0, sizeof(app_gap_cb_t));
     p_dev->state = APP_GAP_STATE_DEVICE_DISCOVERING;
-    esp_bt_gap_start_discovery(ESP_BT_INQ_MODE_GENERAL_INQUIRY, 10, 0);
+    esp_bt_gap_start_discovery(ESP_BT_INQ_MODE_GENERAL_INQUIRY, 50, 0);
 		printf("BT DISCO\n");
 	//esp_bluedroid_disable();	
 }
