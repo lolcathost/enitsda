@@ -37,7 +37,9 @@ void app_main(void){
 		printf("Seleccionado escaneo Bluetooth.\n");
 		bt_inicializar();
 		bt_escaneo();
+		//wifi_conectar_ap();
 		envio_https();
+		//esp_wifi_stop();
 	}else{
 		printf("Variable TIPO_ESCANEO mal defeinida, solo puede ser 1 o 2: %d\n", TIPO_ESCANEO);
 	}

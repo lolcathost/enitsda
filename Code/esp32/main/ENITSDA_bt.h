@@ -104,9 +104,11 @@ void bt_inicializar(void){
 	esp_bt_controller_init(&bt_cfg);
 	esp_bt_controller_enable(ESP_BT_MODE_CLASSIC_BT);
 	esp_bluedroid_init();
+	printf("BT INIT\n");
 }	
 
 void bt_escaneo(void){
+		printf("BT ENABLE\n");
 	esp_bluedroid_enable();
     esp_bt_gap_set_scan_mode(ESP_BT_SCAN_MODE_CONNECTABLE_DISCOVERABLE);
     esp_bt_gap_register_callback(bt_app_gap_cb);
@@ -114,5 +116,6 @@ void bt_escaneo(void){
     memset(p_dev, 0, sizeof(app_gap_cb_t));
     p_dev->state = APP_GAP_STATE_DEVICE_DISCOVERING;
     esp_bt_gap_start_discovery(ESP_BT_INQ_MODE_GENERAL_INQUIRY, 10, 0);
-	esp_bluedroid_disable();	
+		printf("BT DISCO\n");
+	//esp_bluedroid_disable();	
 }

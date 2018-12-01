@@ -17,9 +17,9 @@ void envio_https(void){
 	int ret;
 	char REQUEST[512];
 	char JSON[128];
-	char mac_cadena[12];
-	int *p=NULL;
+	char mac_cadena[13];
 	int https_cuenta=0,r;
+	int *p=NULL;
 	
 	EventBits_t uxBits;
     uxBits=xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT, true, true, 10000/portTICK_PERIOD_MS);
@@ -53,10 +53,10 @@ void envio_https(void){
 
 	for(int i=0;i<https_cuenta;i++){
 		if (TIPO_ESCANEO == ESCANEO_WIFI){
-			*p=*mac_wifi_listado[i].mac;
+			p=mac_wifi_listado[i].mac;
 			r=mac_wifi_listado[i].rssi;
 		}else if(TIPO_ESCANEO == ESCANEO_BT){
-			*p=*mac_bt_listado[i].mac;
+			p=mac_bt_listado[i].mac;
 			r=mac_bt_listado[i].rssi;
 		}
 		snprintf(mac_cadena,sizeof(mac_cadena),"%02x%02x%02x%02x%02x%02x",p[0],p[1],p[2],p[3],p[4],p[5]);
@@ -74,7 +74,7 @@ void envio_https(void){
 			
 		written_bytes = 0;
 		printf("%s\n",REQUEST);
-		/*
+		
 		do{
 			ret = esp_tls_conn_write(tls, 
 			REQUEST + written_bytes, 
@@ -87,7 +87,6 @@ void envio_https(void){
 				return;
 			}
 		} while(written_bytes < strlen(REQUEST));
-		*/
 	}
 	printf("Reseteo de variables de conteo wifi y bt\n");
 	mac_wifi_cuenta=0;

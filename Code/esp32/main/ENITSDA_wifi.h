@@ -65,8 +65,8 @@ void sniffer(void* buf, wifi_promiscuous_pkt_type_t type){
 			if(mac_wifi_cuenta >= MAC_TOTAL_ARRAY){
 				printf("Superado el limite de MACs: %d\n", mac_wifi_cuenta);
 				// Añadir bandera de saturacion de MAC, posible ataque.
-			}else{
-				memcpy(mac_wifi_listado[mac_wifi_cuenta].mac,mac_temp,sizeof(mac_temp));	
+			}else{			
+				memcpy(mac_wifi_listado[mac_wifi_cuenta].mac,mac_temp,sizeof(mac_temp));
 				mac_wifi_listado[mac_wifi_cuenta].rssi=paquete->rx_ctrl.rssi;
 				mac_wifi_cuenta++;
 			}
