@@ -3,8 +3,7 @@
 #include "ENITSDA_wifi.h"
 #include "ENITSDA_bt.h"
 #include "ENITSDA_https.h"
-//#include "esp_log.h"
-
+ 
 void app_main(void){
 	int cuenta_envio_datos=0;	
     nvs_flash_init();
@@ -37,12 +36,11 @@ void app_main(void){
 		printf("Seleccionado escaneo Bluetooth.\n");
 		bt_inicializar();
 		bt_escaneo();
-		for (int i=0; i>100; i++){
-		vTaskDelay(500 / portTICK_PERIOD_MS);	
-		}
+					vTaskDelay(10000 / portTICK_PERIOD_MS);		
 		wifi_conectar_ap();
 		envio_https();
 		esp_wifi_stop();
+				vTaskDelay(10000 / portTICK_PERIOD_MS);		
 		esp_restart();
 	}else{
 		printf("Variable TIPO_ESCANEO mal defeinida, solo puede ser 1 o 2: %d\n", TIPO_ESCANEO);

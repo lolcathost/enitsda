@@ -80,7 +80,7 @@ void bt_app_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param){
 
 				printf("TOTAL: %d\n",mac_bt_cuenta);
 				p_dev->state = APP_GAP_STATE_DEVICE_DISCOVERING;
-				esp_bt_gap_start_discovery(ESP_BT_INQ_MODE_GENERAL_INQUIRY, 50, 0);
+				esp_bt_gap_start_discovery(ESP_BT_INQ_MODE_GENERAL_INQUIRY, 10, 0);
 			} else if (param->disc_st_chg.state == ESP_BT_GAP_DISCOVERY_STARTED) {
 				printf( "Discovery started.\n");
 			}
@@ -100,18 +100,14 @@ void bt_inicializar(void){
 	esp_bt_controller_init(&bt_cfg);
 	esp_bt_controller_enable(ESP_BT_MODE_CLASSIC_BT);
 	esp_bluedroid_init();
-	printf("BT INIT\n");
 }	
 
 void bt_escaneo(void){
-		printf("BT ENABLE\n");
 	esp_bluedroid_enable();
     esp_bt_gap_set_scan_mode(ESP_BT_SCAN_MODE_CONNECTABLE_DISCOVERABLE);
     esp_bt_gap_register_callback(bt_app_gap_cb);
     app_gap_cb_t *p_dev = &m_dev_info;
     memset(p_dev, 0, sizeof(app_gap_cb_t));
     p_dev->state = APP_GAP_STATE_DEVICE_DISCOVERING;
-    esp_bt_gap_start_discovery(ESP_BT_INQ_MODE_GENERAL_INQUIRY, 50, 0);
-		printf("BT DISCO\n");
-	//esp_bluedroid_disable();	
+    esp_bt_gap_start_discovery(ESP_BT_INQ_MODE_GENERAL_INQUIRY, 10, 0);
 }

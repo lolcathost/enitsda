@@ -10,6 +10,7 @@
 #include "lwip/dns.h"
 
 #define INTENTOS_RECONECTAR 3
+
 static EventGroupHandle_t s_wifi_event_group;
 const int WIFI_CONNECTED_BIT = BIT0;
 static int s_retry_num = 0;
@@ -87,14 +88,15 @@ void wifi_inicializar(void){
     esp_wifi_set_promiscuous_rx_cb(&sniffer);
     esp_wifi_set_ps(WIFI_PS_NONE);
 
+// Quitado el DHCP temportalmente
 	tcpip_adapter_init();
-	tcpip_adapter_dhcpc_stop(TCPIP_ADAPTER_IF_STA); 
+/*	tcpip_adapter_dhcpc_stop(TCPIP_ADAPTER_IF_STA); 
 	inet_pton(AF_INET, IP, &esp_ip.ip);
 	inet_pton(AF_INET, GW, &esp_ip.gw);
 	inet_pton(AF_INET, NETMASK, &esp_ip.netmask);
 	inet_pton(AF_INET, DNS, &dnsserver.ip);
 	tcpip_adapter_set_ip_info(TCPIP_ADAPTER_IF_STA, &esp_ip);
-	tcpip_adapter_set_dns_info(TCPIP_ADAPTER_IF_STA, TCPIP_ADAPTER_DNS_MAIN, &dnsserver);
+	tcpip_adapter_set_dns_info(TCPIP_ADAPTER_IF_STA, TCPIP_ADAPTER_DNS_MAIN, &dnsserver);*/
 }
 
 void wifi_conectar_ap(void){
