@@ -18,8 +18,8 @@ void envio_https(void){
 	char REQUEST[512];
 	char JSON[128];
 	char mac_cadena[12];
-	//int *p=NULL,*r=NULL;
-	int https_cuenta=0;
+	int *p=NULL;
+	int https_cuenta=0,r;
 	
 	EventBits_t uxBits;
     uxBits=xEventGroupWaitBits(s_wifi_event_group, WIFI_CONNECTED_BIT, true, true, 10000/portTICK_PERIOD_MS);
@@ -53,11 +53,11 @@ void envio_https(void){
 
 	for(int i=0;i<https_cuenta;i++){
 		if (TIPO_ESCANEO == ESCANEO_WIFI){
-			int *p=mac_wifi_listado[i].mac;
-			int *r=mac_wifi_listado[i].rssi;
+			*p=mac_wifi_listado[i].mac;
+			r=mac_wifi_listado[i].rssi;
 		}else if(TIPO_ESCANEO == ESCANEO_BT){
-			int *p=mac_bt_listado[i].mac;
-			int *r=mac_bt_listado[i].rssi;
+			*p=mac_bt_listado[i].mac;
+			r=mac_bt_listado[i].rssi;
 		}
 		snprintf(mac_cadena,sizeof(mac_cadena),"%02x%02x%02x%02x%02x%02x",p[0],p[1],p[2],p[3],p[4],p[5]);
 		snprintf(JSON,sizeof(JSON),"{\"mac\":\"%s\",\"nodo\":\"%s\",\"tipo\":\"%d\",\"rssi\":\"%d\"}\r\n",mac_cadena,ESP_NODO,TIPO_ESCANEO,r);

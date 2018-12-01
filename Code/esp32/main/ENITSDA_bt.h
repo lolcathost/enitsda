@@ -1,4 +1,4 @@
-// Modificado del ejemplo bt_discovery de espressif
+// Alta modificación del ejemplo bt_discovery de espressif
 #include "esp_bt.h"
 #include "esp_bt_main.h"
 #include "esp_bt_device.h"
