@@ -1,0 +1,23 @@
+*PostHackaton:*
+
+ESP32:
+	- [X] Ticket a Espressif para soporte MFP
+	
+C&C:
+	- [ ] Panel Multi despliegue
+	- [ ] Selector de tipo de alertas (SMS, Email, Telegram, Slack, Push)...
+	- [ ] Adaptación selectiva del interfaz con templates
+
+*Hackaton:*
+
+ESP32:
+	- [ ] Añadir descubrimiento bluetooth
+	- [x] Corregir el random stack overflow en la petición HTTPS 
+	- [x] Añadir POST + TOKEN
+	- [x] Generar envio de MACs por HTTPS
+	- [ ] Encriptado del boot y del .bin
+C&C:
+	- [x] Lógica para alertas
+	- [ ] Mejora de alertas
+	- [x] Bot telegram
+	- [x] uwsgi automatico
