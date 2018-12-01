@@ -10,7 +10,7 @@
 // Tipo de escaneo que realizara el ESP32: WIFI o BT
 #define ESCANEO_WIFI 1
 #define ESCANEO_BT 2
-#define TIPO_ESCANEO ESCANEO_BT
+#define TIPO_ESCANEO ESCANEO_WIFI
 
 // Con 512 deberia ser suficiente, 512 macs en un minuto..
 #define MAC_TOTAL_ARRAY 512

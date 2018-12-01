@@ -53,10 +53,10 @@ void envio_https(void){
 
 	for(int i=0;i<https_cuenta;i++){
 		if (TIPO_ESCANEO == ESCANEO_WIFI){
-			*p=mac_wifi_listado[i].mac;
+			*p=*mac_wifi_listado[i].mac;
 			r=mac_wifi_listado[i].rssi;
 		}else if(TIPO_ESCANEO == ESCANEO_BT){
-			*p=mac_bt_listado[i].mac;
+			*p=*mac_bt_listado[i].mac;
 			r=mac_bt_listado[i].rssi;
 		}
 		snprintf(mac_cadena,sizeof(mac_cadena),"%02x%02x%02x%02x%02x%02x",p[0],p[1],p[2],p[3],p[4],p[5]);
